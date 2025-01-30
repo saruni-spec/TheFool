@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    The Fool
+{% endblock %}
+
+{% block content %}
+
+    {% if articles is none %}
+        <h2>No articles available.</h2>
+    {% elif articles is iterable and articles|length > 0 %}
+
+
+            {% for article in articles %}
+
+                {% if article is not none %}
+
+                  <a href="{{ url_for('article.article',title=article[0])}}" >{{ article [0]}}</a>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+    {% else %}
+       <h2>No articles available.</h2>
+    {% endif %}
+
+{% endblock %}

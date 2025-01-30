@@ -1,0 +1,19 @@
+.form_content
+{
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  padding:5%;
+  width: 50%;
+}
+input
+{
+  width: 70%;
+  height: 20%;
+  margin: 1%;
+}
+
+  
+  

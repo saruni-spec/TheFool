@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+
+Welcome...
+
+{% endblock %}
+
+{% block content %}
+
+    <form class="content" action="register_user" method="post">
+
+        {{form.csrf_token}}
+        {{form.username.label}}{{form.username()}}
+        {% if email_error %}
+            <span class="error">{{ email_error }}</span>
+        {% endif %}
+        <span><br></span>
+        {{form.password.label}}{{form.password()}}
+        {% if form.password.errors %}
+            <span class="error">{{ form.password.errors[0] }}</span>
+        {% endif %}
+        <span><br></span>
+        {{form.confirm_password.label}}{{form.confirm_password()}}
+        <span><br></span>
+        {{form.be_writer.label}}{{form.be_writer()}}
+
+        <span><br></span>
+        <button type="submit" method="post">{{form.submit}}Register</button>
+
+    </form>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/forms.css')}}">
+{% endblock %}

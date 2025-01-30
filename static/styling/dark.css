@@ -1,0 +1,77 @@
+/* Dark Theme */
+
+/* Body */
+body {
+  background-color: #1e1e1e ;
+  color: #f2f2f2 ;
+}
+
+/* Links */
+a {
+  color: #a0f5f8 ;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #f1c40f ;
+}
+
+/* Text */
+p, li, h1, h2, h3, h4, h5, h6 {
+  color: #d0d0d0 ;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  border-bottom: 1px solid #444;
+  font-family: 'Caveat', 'Shadows Into Light', cursive, sans-serif;
+}
+
+/* Buttons */
+.btn {
+  background-color: #444 ;
+  color: #f2f2f2 ;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px ;
+  text-transform: uppercase ;
+  font-weight: bold ;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #a0f5f8 ;
+  color: #1e1e1e ;
+  transform: scale(1.05);
+}
+
+/* Hoverable elements */
+.hoverable {
+  box-shadow: 0 0 10px rgba(160, 245, 248, 0.3) ;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.hoverable:hover {
+  box-shadow: 0 0 20px rgba(160, 245, 248, 0.6) ;
+}
+
+/* Footer */
+footer {
+  background-color: #111 ;
+  color: #d0d0d0 ;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Inputs and Textareas */
+input, textarea {
+  background-color: #333 ;
+  color: #f2f2f2 ;
+  border: 1px solid #444 ;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+input:focus, textarea:focus {
+  border-color: #a0f5f8 ;
+  outline: none;
+}

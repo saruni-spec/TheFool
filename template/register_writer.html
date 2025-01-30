@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    <form class="content" action="register_writer" method="post">
+
+            {{ form.csrf_token }}
+            {{form.topics.label}}{{form.topics}}
+            {{ form.experience.label }}{{ form.experience }}
+            {{ form.article.label }}{{ form.article }}
+            <button type="submit" method="post">submit</button>
+
+    </form>
+
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/forms.css')}}">
+{% endblock %}

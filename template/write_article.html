@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Writer's Page
+{% endblock %}
+
+{% block content %}
+<form class="write" name="write_form" action="write" method="POST">
+    <div class="write1">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label for="title">Title</label>
+    <input name="title" id="title" type="text" value="{{title}}">
+    <label for="article_content"></label>
+    <textarea name="article_content" id="article_content" cols="30" rows="10">{{ article_content }}</textarea>
+    </div>
+    <div class="write1">
+    <div></div>
+    <div></div>
+    <button type="submit" name="submit" value="view">View</button>
+    <button type="submit" name="submit" value="update">Update</button>
+    <button type="submit" name="submit" value="save">Save</button>
+    <button type="submit" name="submit" value="post">Post</button>
+    </div>
+</form>
+
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/write.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/forms.css')}}">
+{% endblock %}

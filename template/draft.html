@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{username}}
+{% endblock %}
+
+{% block content %}
+
+    <div class="content">
+        <div>
+        <p>{{topics}}</p>
+        </div>
+        <div>
+          <p>{{article}}</p>
+        </div>
+        <div>
+        <form action="{{ url_for('draft.draft', username=username) }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <label for="accept_writer">Accept Writer</label>
+          <input type="checkbox" name="accept_writer" id="accept_writer" value="yes">
+          <button type="submit">Submit</button>
+      </form>
+      </div>
+
+    </div>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/forms.css')}}">
+{% endblock %}

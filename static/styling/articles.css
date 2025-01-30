@@ -1,0 +1,90 @@
+/* Article List Styles for The Fool */
+.content {
+    display: grid;
+    grid-template-columns: repeat(1fr);
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9f5f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.content a {
+    display: block;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Caveat', 'Shadows Into Light', cursive, sans-serif;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+
+.content a:hover::before {
+    left: 100%;
+}
+
+.content a:hover {
+    transform: scale(1.05);
+    color: #e67e22;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Add a playful fool's cap pseudo-element */
+.content a::after {
+    content: '🃏';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.content a:hover::after {
+    opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .content a {
+        font-size: 1.2rem;
+        padding: 12px;
+    }
+}
+
+/* Subtle animation for the entire list */
+@keyframes fadeInArticles {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content {
+    animation: fadeInArticles 0.8s ease-out;
+}
+
+/* Alternating background colors for visual interest */
+.content a:nth-child(odd) {
+    background-color: #f7f3e8;
+}
+
+.content a:nth-child(even) {
+    background-color: #f1f1f1;
+}
