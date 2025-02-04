@@ -1,5 +1,5 @@
 from flask import request, render_template,Blueprint
-from models.DB_conn import DBconnection,sqlite3
+from models.db import DBconnection,sqlite3
 
 bp=Blueprint('/search',__name__)
 db_path = '/home/boss/TheFool/TheFool/Blog/Articles.db'
