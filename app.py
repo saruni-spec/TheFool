@@ -16,9 +16,9 @@ from views.about import bp as about_bp
 from views.privacy import bp as privacy_bp
 from views.help import bp as help_bp
 from views.edit_article import bp as edit_article_bp
-from views.bree import bp as bree_bp
 from views.logout import bp as logout_bp
 from views.verification import bp as verification_bp
+from views.add_comment import bp as add_comment_bp
 from flask import session, request
 
 
@@ -39,8 +39,8 @@ app.register_blueprint(about_bp)
 app.register_blueprint(privacy_bp)
 app.register_blueprint(help_bp)
 app.register_blueprint(edit_article_bp)
-app.register_blueprint(bree_bp)
 app.register_blueprint(logout_bp)
+app.register_blueprint(add_comment_bp)
 
 
 # Serve static files

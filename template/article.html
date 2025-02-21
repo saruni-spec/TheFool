@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+
 {% block title %}
     {{title}}
 {% endblock %}
@@ -8,4 +9,50 @@
 
  {{content | safe}}
 
+ <div class="comments">
+    <h2>Comments</h2>
+    <div class="add_comment">
+        <form id="commentForm" action="{{url_for('add_comment.add_comment')}}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="article_id" value="{{title}}">
+            <input type="text" name="author" placeholder="Your name" required>
+            <textarea name="content" placeholder="Share your thoughts..." required></textarea>
+            <input type="submit" value="Post Comment">
+        </form>
+    </div>
+    
+    <div class="comments-list">
+        {% if comments %}
+            {% for comment in comments %}
+                <div class="comment">
+                    <div class="comment-author">{{comment.author}}</div>
+                    <div class="comment-content">{{comment.content}}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+ <script>
+    document.getElementById('commentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response, maybe add the new comment to the DOM
+            const commentsDiv = document.querySelector('.comments');
+            const newComment = `
+                <div class="comment">
+                    <div class="comment-author">${data.author}</div>
+                    <div class="comment-content">${data.content}</div>
+                </div>
+            `;
+            commentsDiv.insertAdjacentHTML('beforeend', newComment);
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
 {% endblock %}
