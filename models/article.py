@@ -22,6 +22,7 @@ class Article(DB):
 
         query = "INSERT INTO Article (article_name,article_content,author) values (%s,%s,%s)"
         self.execute_query(query, (self.content, self.author))
+        self.conn.commit()
 
     def get(self, title):
 
@@ -41,12 +42,14 @@ class Article(DB):
         query = "DELETE FROM Article where article_name=?"
         param = (title,)
         self.execute_query(query, param)
+        self.conn.commit()
 
     def update(self, title, content):
 
         query = "UPDATE Article set article_content=%s where article_name=?"
         param = (content, title)
         self.execute_query(query, param)
+        self.conn.commit()
 
     def add_comment(self, title, comment):
         # Add the comment to the article with the given title

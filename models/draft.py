@@ -2,10 +2,8 @@ from models.db import DB
 
 
 class Draft(DB):
-    def __init__(
-        self, email, topics, article, db_name, db_user, db_password, db_host, db_port
-    ):
-        super().__init__(db_name, db_user, db_password, db_host, db_port)
+    def __init__(self, email, topics, article):
+        super().__init__()
         self.username = email
         self.topics = topics
         self.article = article
@@ -15,6 +13,7 @@ class Draft(DB):
         param = (self.username, self.topics, self.article)
         query = "INSERT INTO Draft(username, topics, article) VALUES (%s, %s, %s)"
         self.execute_query(query, param)
+        self.conn.commit()
 
     def get(self, username):
 
@@ -35,6 +34,7 @@ class Draft(DB):
         param = (username,)
         query = "DELETE FROM Draft WHERE username=?"
         self.execute_query(query, param)
+        self.conn.commit()
 
     def close_connection(self):
         """Explicitly close the connection."""

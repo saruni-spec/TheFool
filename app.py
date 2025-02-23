@@ -82,15 +82,12 @@ def unauthorized():
     return redirect("/login")
 
 
-app.config["SECRET_KEY"] = "mysecretkey"
-app.config["MAIL_SERVER"] = "smtp-relay.sendinblue.com"
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
 app.config["MAIL_PORT"] = 587
 app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = "oddsthingshere@gmail.com"
-app.config["MAIL_PASSWORD"] = "2Eq6Gy87LKVfhzAv"
+app.config["MAIL_PASSWORD"] = "uwit xwod fcuu upee"
 app.config["MAIL_DEFAULT_SENDER"] = "oddsthingshere@gmail.com"
-app.config["MAIL_MAX_EMAILS"] = None
-app.config["MAIL_ASCII_ATTACHMENTS"] = False
 
 mail = Mail(app)
 

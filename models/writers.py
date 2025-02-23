@@ -3,6 +3,7 @@ from models.db import DB
 
 class Writer(DB):
     def __init__(self, email, topics, article):
+        super().__init__()
         self.topics = topics
         self.article = article
         self.username = email
@@ -12,6 +13,7 @@ class Writer(DB):
         query = "INSERT INTO Writer (username,topics,article) values (%s,%s,%s)"
         param = (self.username, self.topics, self.article)
         self.execute_query(query, param)
+        self.conn.commit()
 
     def get(self, email):
 
@@ -25,3 +27,4 @@ class Writer(DB):
         query = "DELETE * FROM Writer WHERE username=?"
         param = (email,)
         self.execute_query(query, param)
+        self.conn.commit()

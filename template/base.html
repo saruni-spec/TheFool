@@ -11,12 +11,14 @@
     <meta property="og:url" content="https://wisefool.pythonanywhere.com">
     <meta property="og:title" content="the Wise Fool">
     <title>thewisefool</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/articles.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/comments.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/body.css')}}">
-    <link id="theme" rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/light.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/custom.css')}}">
-    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Shadows+Into+Light&family=Kalam&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/body.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/articles.css')}}" media="print" onload="this.media='all'">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/comments.css')}}" media="print" onload="this.media='all'">
+    
+    <link id="theme" rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/light.css')}}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Shadows+Into+Light&family=Kalam&display=swap" rel="preconnect">
 </head>
 <body>
     <nav class="custom-navbar">

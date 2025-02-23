@@ -8,6 +8,7 @@ class DB:
         Args:
             db_path (str): Path to SQLite database file
         """
+
         self.db_path = db_path
         self.connect()
 

@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 
 class Reader(DB):
     def __init__(self, email):
+        super().__init__()  # Initialize the DB connection
         self.id = email
         self.email = email
 
@@ -18,13 +19,14 @@ class Reader(DB):
         self.password = generate_password_hash(password)
 
         param = (self.email, self.password)
-        query = "INSERT INTO Reader(email,password) values (%s,%s)"
+        query = "INSERT INTO Reader(username,password) values (?,?)"
         self.execute_query(query, param)
+        self.conn.commit()
 
     def get(self, email):
 
         param = (email,)
-        query = "SELECT * FROM Reader WHERE email =? "
+        query = "SELECT * FROM Reader WHERE username =? "
 
         user = self.execute_query(query, param)
         return user.fetchone()
@@ -32,5 +34,6 @@ class Reader(DB):
     def delete(self, username):
 
         param = (username,)
-        query = "DELETE * FROM Reader WHERE email =? "
+        query = "DELETE FROM Reader WHERE username = ?"
         self.execute_query(query, param)
+        self.conn.commit()

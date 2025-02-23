@@ -27,29 +27,19 @@ def register_user():
             if form.validate_on_submit():
                 username = form.username.data
                 password = form.password.data
-                accept_terms = form.be_writer.data
                 session["username"] = username
                 session["password"] = password
 
-                if accept_terms is False:
-                    return render_template(
-                        "register_user.html",
-                        form=form,
-                        email_error="You have not accepted terms and policies",
-                    )
-                else:
-                    with open(Path(__file__).parent / "confirmation.html", "r") as f:
-                        html_content = f.read()
-                    email = username
-                    confirmation_code = generate_verification_code()
-                    message = Message("Confirmation Code", recipients=[email])
-                    message.html = html_content.format(
-                        confirmation_code=confirmation_code
-                    )
-                    mail.send(message)
-                    session["confirmation_code"] = confirmation_code
-                    print(confirmation_code, "confirmation")
-                    return redirect(url_for("verification.verification", email=email))
+                with open(Path(__file__).parent / "confirmation.html", "r") as f:
+                    html_content = f.read()
+                email = username
+                confirmation_code = generate_verification_code()
+                message = Message("Confirmation Code", recipients=[email])
+                message.html = html_content.format(confirmation_code=confirmation_code)
+                mail.send(message)
+                session["confirmation_code"] = confirmation_code
+                print(confirmation_code, "confirmation")
+                return redirect(url_for("verification.verification", email=email))
             else:
                 print(form.errors)
             if "password" in form.errors:
