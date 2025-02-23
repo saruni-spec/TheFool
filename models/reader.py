@@ -12,6 +12,9 @@ class Reader(DB):
         # return True if the user is authenticated, False otherwise
         return True
 
+    def is_active(self):
+        return True
+
     def get_id(self):
         return self.id
 
@@ -23,9 +26,9 @@ class Reader(DB):
         self.execute_query(query, param)
         self.conn.commit()
 
-    def get(self, email):
+    def get(self):
 
-        param = (email,)
+        param = (self.email,)
         query = "SELECT * FROM Reader WHERE username =? "
 
         user = self.execute_query(query, param)

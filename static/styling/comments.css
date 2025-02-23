@@ -124,11 +124,11 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .comments {
-        padding: 15px;
+        padding: 5px;
     }
 
     .add_comment {
-        padding: 15px;
+        padding: 5px;
     }
 
     #commentForm input[type="submit"] {
@@ -136,7 +136,7 @@
     }
 
     .comment {
-        padding: 15px;
+        padding: 5px;
     }
 }
 

@@ -101,3 +101,9 @@ thefoolenv/
 *.thefoolenv/
 *.thefoolenv
 *.thefoolenv/*
+
+
+.db/
+*.db
+*.db/
+*.db/*

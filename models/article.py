@@ -13,15 +13,15 @@ def convert_str(comments):
 
 
 class Article(DB):
-    def __init__(self):
+    def __init__(
+        self,
+    ):
         super().__init__()
 
-    def save(self, content, writer):
-        self.content = content
-        self.author = writer
+    def save(self, content, title):
 
-        query = "INSERT INTO Article (article_name,article_content,author) values (%s,%s,%s)"
-        self.execute_query(query, (self.content, self.author))
+        query = "INSERT INTO Article (article_name,article_content) values (?,?)"
+        self.execute_query(query, (title, content))
         self.conn.commit()
 
     def get(self, title):

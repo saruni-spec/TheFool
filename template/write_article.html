@@ -5,21 +5,16 @@ Writer's Page
 {% endblock %}
 
 {% block content %}
-<form class="write" name="write_form" action="write" method="POST">
+<form class="write" name="write_form" action="{{url_for('write_article.write_article')}}" method="POST">
     <div class="write1">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <label for="title">Title</label>
-    <input name="title" id="title" type="text" value="{{title}}">
+    <input name="title" id="title" type="text">
     <label for="article_content"></label>
-    <textarea name="article_content" id="article_content" cols="30" rows="10">{{ article_content }}</textarea>
+    <textarea name="article_content" id="article_content" cols="30" rows="10"></textarea>
     </div>
     <div class="write1">
-    <div></div>
-    <div></div>
-    <button type="submit" name="submit" value="view">View</button>
-    <button type="submit" name="submit" value="update">Update</button>
-    <button type="submit" name="submit" value="save">Save</button>
-    <button type="submit" name="submit" value="post">Post</button>
+    <button type="submit">Post</button>
     </div>
 </form>
 
