@@ -24,7 +24,7 @@ class Draft(DB):
             return draft
 
         param = (username,)
-        query = "SELECT * FROM Draft WHERE username=?"
+        query = "SELECT * FROM Draft WHERE username=%s"
 
         draft = self.execute_query(query, param)
         return draft.fetchone()
@@ -32,7 +32,7 @@ class Draft(DB):
     def delete(self, username):
 
         param = (username,)
-        query = "DELETE FROM Draft WHERE username=?"
+        query = "DELETE FROM Draft WHERE username=%s"
         self.execute_query(query, param)
         self.conn.commit()
 

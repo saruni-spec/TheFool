@@ -1,25 +1,41 @@
-import sqlite3
+import psycopg2
+from psycopg2 import pool
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables
 
 
 class DB:
-    def __init__(self, db_path="articles.db"):
+    def __init__(self, connection_string=None):
         """
-        Initialize database connection
+        Initialize database connection to Neon PostgreSQL
         Args:
-            db_path (str): Path to SQLite database file
+            connection_string (str): Direct PostgreSQL connection string (if provided)
         """
+        self.connection_string = connection_string or os.getenv(
+            "NEON_CONNECTION_STRING"
+        )
 
-        self.db_path = db_path
+        if not self.connection_string:
+            raise ValueError(
+                "Neon connection string not provided or found in environment variables"
+            )
+
+        self.conn = None
+        self.cursor = None
         self.connect()
 
     def connect(self):
-        """Establish connection to the database"""
+        """Establish connection to the Neon PostgreSQL database"""
         try:
-            self.conn = sqlite3.connect(self.db_path)
+            # Connect to Neon (SSL is enabled by default in Neon)
+            self.conn = psycopg2.connect(self.connection_string, sslmode="require")
+            self.conn.autocommit = False
             self.cursor = self.conn.cursor()
             return self.conn
-        except sqlite3.Error as e:
-            print(f"Error connecting to database: {e}")
+        except psycopg2.Error as e:
+            print(f"Error connecting to Neon database: {e}")
             raise
 
     def close(self):
@@ -52,8 +68,10 @@ class DB:
         """
         try:
             if params:
-                return self.cursor.execute(query, params)
-            return self.cursor.execute(query)
-        except sqlite3.Error as e:
+                self.cursor.execute(query, params)
+            else:
+                self.cursor.execute(query)
+            return self.cursor
+        except psycopg2.Error as e:
             print(f"Error executing query: {e}")
             raise

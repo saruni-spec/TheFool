@@ -20,13 +20,13 @@ class Article(DB):
 
     def save(self, content, title):
 
-        query = "INSERT INTO Article (article_name,article_content) values (?,?)"
+        query = "INSERT INTO Article (article_name,article_content) values (%s,%s)"
         self.execute_query(query, (title, content))
         self.conn.commit()
 
     def get(self, title):
 
-        query = "SELECT * FROM Article where article_name=?"
+        query = "SELECT * FROM Article where article_name=%s"
         param = (title,)
         article = self.execute_query(query, param)
 
@@ -39,14 +39,14 @@ class Article(DB):
 
     def delete(self, title):
 
-        query = "DELETE FROM Article where article_name=?"
+        query = "DELETE FROM Article where article_name=%s"
         param = (title,)
         self.execute_query(query, param)
         self.conn.commit()
 
     def update(self, title, content):
 
-        query = "UPDATE Article set article_content=%s where article_name=?"
+        query = "UPDATE Article set article_content=%s where article_name=%s"
         param = (content, title)
         self.execute_query(query, param)
         self.conn.commit()
@@ -54,7 +54,7 @@ class Article(DB):
     def add_comment(self, title, comment):
         # Add the comment to the article with the given title
         # Comment is a list
-        query = "SELECT comments FROM Article where article_name=?"
+        query = "SELECT comments FROM Article where article_name=%s"
         param = (title,)
         article = self.execute_query(query, param)
 
@@ -68,7 +68,7 @@ class Article(DB):
         comments_str = str(comments)
 
         print(comments_str)
-        query = "UPDATE Article set comments=? where article_name=?"
+        query = "UPDATE Article set comments=%s where article_name=%s"
         param = (comments_str, title)
         self.execute_query(query, param)
         # commit the changes
