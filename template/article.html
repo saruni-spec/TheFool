@@ -18,7 +18,7 @@
         <form id="commentForm" action="{{url_for('add_comment.add_comment')}}" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="article_id" value="{{title}}">
-            <input type="text" name="author" placeholder="Your name" required>
+            <input type="text" name="author" id="author" placeholder="Your name" required>
             <textarea name="content" placeholder="Share your thoughts..." required></textarea>
             <input type="submit" value="Post Comment">
         </form>
@@ -68,8 +68,8 @@
 
     window.onload=()=>{
         if (author !== null){
-            const author_inp=document.getElementsByName("author")[0];
-            author_inp.textContent=author;
+            const author_inp=document.getElementById("author");
+            author_inp.value=author;
 
         }
     }
