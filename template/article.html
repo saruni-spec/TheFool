@@ -36,14 +36,14 @@
     </div>
 </div>
  <script>
-    const user_email="fool_user";
+    const user="fool_user";
     
     document.getElementById('commentForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
         const author_inp=document.getElementsByName("author")[0];
         const auth_name=author_inp.value;
-        window.localStorage.setItem(user_email,auth_name);
+        window.localStorage.setItem(user,auth_name);
         
         fetch(this.action, {
             method: 'POST',
@@ -64,14 +64,16 @@
         .catch(error => console.error('Error:', error));
     });
 
-    const author=window.localStorage.getItem(user_email);
+    
 
     window.onload=()=>{
-        if (author !== null){
-            const author_inp=document.getElementById("author");
-            author_inp.value=author;
+        if (!author)return;
+        
+        const author=window.localStorage.getItem(user);
+        const author_inp=document.getElementById("author");
+        author_inp.value=author;
 
-        }
+        
     }
 
     </script>
