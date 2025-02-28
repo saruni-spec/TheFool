@@ -16,6 +16,7 @@ def cached_articles():
     return data
 
 
+@bp.route("/", methods=["POST", "GET"])
 @bp.route("/home", methods=["POST", "GET"])
 def home():
     with current_app.app_context():

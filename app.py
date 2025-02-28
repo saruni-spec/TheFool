@@ -51,11 +51,6 @@ def static_file(path):
     return app.send_static_file(path)
 
 
-@app.route("/")
-def index():
-    return redirect("/home")
-
-
 csrf = CSRFProtect()
 csrf.init_app(app)
 

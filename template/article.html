@@ -35,24 +35,27 @@
         {% endif %}
     </div>
 </div>
- <script>
-    const user="fool_user";
-    
+<script>
+    const user = "fool_user"; // Key for localStorage
+
     document.getElementById('commentForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const author_inp=document.getElementsByName("author")[0];
-        const auth_name=author_inp.value;
-        window.localStorage.setItem(user,auth_name);
+        const authorInput = document.getElementById("author");
+        const authName = authorInput.value;
         
+        // Save the author name to localStorage
+        window.localStorage.setItem(user, authName);
+        
+        // Submit the form data via fetch
         fetch(this.action, {
             method: 'POST',
             body: new FormData(this),
         })
         .then(response => response.json())
         .then(data => {
-            // Handle the response, maybe add the new comment to the DOM
-            const commentsDiv = document.querySelector('.comments');
+            // Add the new comment to the DOM
+            const commentsDiv = document.querySelector('.comments-list');
             const newComment = `
                 <div class="comment">
                     <div class="comment-author">${data.author}</div>
@@ -64,17 +67,15 @@
         .catch(error => console.error('Error:', error));
     });
 
-    
-
-    window.onload=()=>{
-        if (!author)return;
-        
-        const author=window.localStorage.getItem(user);
-        const author_inp=document.getElementById("author");
-        author_inp.value=author;
-
-        
-    }
-
-    </script>
+  
+    document.addEventListener('DOMContentLoaded', function() {
+        const author = window.localStorage.getItem(user);
+        if (author !== null && author !== undefined) {
+            const authorInput = document.getElementById("author");
+            if (authorInput) {
+                authorInput.value = author;
+            }
+        }
+    });
+</script>
 {% endblock %}
