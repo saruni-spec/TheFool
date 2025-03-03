@@ -27,6 +27,9 @@ app = Flask(__name__, template_folder="template", static_folder="static")
 
 app.config["SECRET_KEY"] = "mysecretkey"
 
+app.config["CACHE_TYPE"] = "SimpleCache"
+
+
 app.register_blueprint(verification_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(login_bp)

@@ -3,23 +3,21 @@ from models.article import Article
 from cachelib import SimpleCache
 
 bp = Blueprint("home", __name__)
-
 cache = SimpleCache()
 
 
 def cached_articles():
-    cache_key = "articles"
-    data = cache.get(cache_key)
-    if data is None:
-        data = Article().get_all()
-        cache.set(cache_key, data, timeout=60)
-    return data
+    cache_key = "all_articles"
+    articles = cache.get(cache_key)
+    if not articles:
+        articles = Article().get_all()
+        # Cache indefinitely (0 seconds means never expire)
+        cache.set(cache_key, articles, timeout=0)
+    return articles
 
 
-@bp.route("/", methods=["POST", "GET"])
-@bp.route("/home", methods=["POST", "GET"])
+@bp.route("/")
+@bp.route("/home")
 def home():
     with current_app.app_context():
-        articles = cached_articles()
-
-        return render_template("home.html", articles=articles)
+        return render_template("home.html", articles=cached_articles())
