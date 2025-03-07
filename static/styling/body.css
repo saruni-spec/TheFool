@@ -2,13 +2,19 @@
 /* Body and HTML Styles */
 body, html {
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  
   margin: 0;
   padding: 0;
   font-family: 'Kalam', 'Caveat', 'Shadows Into Light', cursive, sans-serif;
   font-size: 16px;
 
+}
+body{
+  display: flex;
+  flex-direction: column;
+}
+*{
+  box-sizing: border-box;
 }
 
 /* Container Styles */
