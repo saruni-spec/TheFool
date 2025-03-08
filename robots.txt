@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /admin/
+Disallow: /account/
+Disallow: /static/styling/
+Disallow: /*?*
+
+# Allow Google Images to index images
+User-agent: Googlebot-Image
+Allow: /static/images/
+
+# Sitemap location
+Sitemap: https://wisefool.xyz/sitemap.xml

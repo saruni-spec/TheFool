@@ -20,6 +20,8 @@ from views.logout import bp as logout_bp
 from views.verification import bp as verification_bp
 from views.add_comment import bp as add_comment_bp
 from views.database import bp as db_bp
+from views.cache_control import bp as cache_control_bp
+from views.sitemap import bp as sitemap_bp
 from flask import session, request
 
 
@@ -46,6 +48,8 @@ app.register_blueprint(edit_article_bp)
 app.register_blueprint(logout_bp)
 app.register_blueprint(add_comment_bp)
 app.register_blueprint(db_bp)
+app.register_blueprint(cache_control_bp)
+app.register_blueprint(sitemap_bp)
 
 
 # Serve static files

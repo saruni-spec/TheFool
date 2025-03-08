@@ -1,21 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The fool's post">
-    <meta name="keywords" content="fool, wise, blog, posts, articles, philosophy, science, technology, mental, psychological">
-    <meta name="author" content="The Fool">
+    <meta name="description" content="The Wise Fool - A unique blend of philosophy, psychology, humor and insights on life's complexities, delivered with wit and occasional wisdom.">
+    <meta name="keywords" content="philosophy, psychology, satire, mental health, wisdom, humor, life advice, social commentary">
+    <meta name="author" content="The Wise Fool">
     <meta name="msvalidate.01" content="59FD170CE5AAEF21805AC2466A71E743" />
+    
+    <!-- Canonical URL to prevent duplicate content issues -->
+    <link rel="canonical" href="https://wisefool.xyz{{ request.path }}" />
+    
+    <!-- Favicon with proper format -->
     <link rel="icon" href="{{url_for('static', filename='images/clown.png')}}" type="image/png">
-    <meta property="og:url" content="https://wisefool.pythonanywhere.com">
-    <meta property="og:title" content="the Wise Fool">
-    <title>thewisefool</title>
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='images/clown.png')}}">
+    
+    <!-- Social media tags -->
+    <meta property="og:url" content="https://wisefool.xyz{{ request.path }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Wise Fool | Philosophy & Psychology with a Twist">
+    <meta property="og:description" content="Where wisdom wears a jester's hat - philosophy, psychology, and insights on life's complexities with humor and occasional accidental brilliance.">
+    <meta property="og:image" content="https://wisefool.xyz{{url_for('static', filename='images/clown.png')}}">
+    
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="The Wise Fool | Philosophy & Psychology with a Twist">
+    <meta name="twitter:description" content="Where wisdom wears a jester's hat - philosophy, psychology, and insights delivered with wit.">
+    
+    <title>{% block page_title %}The Wise Fool | Philosophy, Psychology & Humor{% endblock %}</title>
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url_for('sitemap.sitemap') }}">
+    <!-- CSS with improved loading -->
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/custom.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/body.css')}}">
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/articles.css')}}" media="print" onload="this.media='all'">
+    <link rel="preload" href="{{url_for('static',filename='styling/articles.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{url_for('static',filename='styling/articles.css')}}"></noscript>
     <link id="theme" rel="stylesheet" type="text/css" href="{{url_for('static',filename='styling/light.css')}}">
+    <link rel="preload" href="{{url_for('static',filename='styling/comments.css')}}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{url_for('static',filename='styling/comments.css')}}"></noscript>
     
+    <!-- Preconnect to Google fonts for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Shadows+Into+Light&family=Kalam&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -68,21 +93,58 @@
     </div>
 
     <footer class="custom-footer">
-        <div class="socials">
-            <div class="email"><a href="mailto:oddsthingshere@gmail.com" data-toggle="tooltip" data-placement="top" title="contact us"><img src="{{url_for('static',filename='images/email.jpg')}}" width="40" height="30" alt="email us here"></a></div>
-        </div>
-    </footer>
+      <div class="footer-content">
+          <div class="footer-links">
+              <a href="{{url_for('about.about')}}">About</a>
+              <a href="{{url_for('terms.terms')}}">Terms</a>
+             
+              
+          </div>
+          <div class="socials">
+              <div class="email">
+                  <a href="mailto:oddsthingshere@gmail.com" data-toggle="tooltip" data-placement="top" title="Contact us">
+                      <img src="{{url_for('static',filename='images/email.jpg')}}" width="40" height="30" alt="Email us here" loading="lazy">
+                  </a>
+              </div>
+              <!-- Add more social media icons if you have them -->
+          </div>
+          <div class="copyright">
+              <p>&copy; {% raw %}{{ now.year }}{% endraw %} The Wise Fool. All rights reserved.</p>
+          </div>
+      </div>
+  </footer>
 
-    <script src="{{url_for('static',filename='script/theme.js')}}" loading="lazy"></script>
-    <script>
-        document.getElementById('navbar-toggle').addEventListener('click', function() {
-            var navbarCollapse = document.getElementById('navbar-collapse');
-            if (navbarCollapse.style.display === 'block') {
-                navbarCollapse.style.display = 'none';
-            } else {
-                navbarCollapse.style.display = 'block';
-            }
-        });
-    </script>
+   
+    <!-- Place before closing body tag -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Menu toggle functionality with accessibility
+      const navbarToggle = document.getElementById('navbar-toggle');
+      const navbarCollapse = document.getElementById('navbar-collapse');
+      
+      if (navbarToggle && navbarCollapse) {
+          navbarToggle.addEventListener('click', function() {
+              const expanded = navbarCollapse.style.display === 'block';
+              navbarCollapse.style.display = expanded ? 'none' : 'block';
+              navbarToggle.setAttribute('aria-expanded', !expanded);
+          });
+      }
+  });
+  </script>
+    <!-- Schema.org markup for website -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "The Wise Fool",
+    "url": "https://wisefool.xyz",
+    "description": "Philosophy, psychology, and insights on life's complexities with humor and occasional wisdom",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://wisefool.xyz/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
 </body>
 </html>
