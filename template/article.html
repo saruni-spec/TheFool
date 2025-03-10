@@ -12,6 +12,16 @@
 
  {{content | safe}}
 
+ <!-- Next Article Button -->
+{% if next_article %}
+<div class="next-article-container">
+  <a href="{{ url_for('article.article', title=next_article) }}" class="next-article-button">
+    <span class="next-article-text">{{ next_article }}</span>
+    <span class="next-article-arrow">→</span>
+  </a>
+</div>
+{% endif %}
+
  <div class="comments">
     <h2>Comments</h2>
     <div class="add_comment">

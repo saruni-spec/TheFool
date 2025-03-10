@@ -2,6 +2,11 @@ from flask import Blueprint, render_template, request, redirect
 from models.article import Article
 from flask_login import login_required
 
+# def refresh_next_article_cache():
+#     with current_app.app_context():
+#         next_article_map = build_next_article_map()
+#         cache.set("next_article_map", next_article_map, timeout=3600)
+
 bp = Blueprint("write_article", __name__)
 
 
