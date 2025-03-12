@@ -79,20 +79,10 @@
 /* For larger screens, make the image larger but keep it at the top */
 @media (min-width: 768px) {
     .article-image-container {
-      
+        max-width: 450px; /* Slightly larger on desktop */
         margin: 0 auto 40px auto; /* Maintain centering but with more bottom space */
     }
 }
-
-/* For larger screens, make the image float right with text wrapping */
-@media (min-width: 768px) {
-    .article-image-container {
-        float: right;
-        margin: 5px 0 20px 30px;
-        max-width: 350px;
-    }
-}
-
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
