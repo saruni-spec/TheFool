@@ -50,7 +50,6 @@
 .content a:hover::after {
     opacity: 0.7;
 }
-
 .content-wrapper {
     max-width: 800px;
     margin: 0 auto;
@@ -58,9 +57,9 @@
 }
 
 .article-image-container {
-    margin: 30px 0;
+    margin: 0 auto 30px auto; /* Adjusted margin to create space below the image */
     text-align: center;
-    max-width: 280px;
+    max-width: 280px; /* Controlled width for small screens */
 }
 
 .article-image {
@@ -75,6 +74,14 @@
     font-style: italic;
     color: #666;
     font-size: 0.9em;
+}
+
+/* For larger screens, make the image larger but keep it at the top */
+@media (min-width: 768px) {
+    .article-image-container {
+        max-width: 450px; /* Slightly larger on desktop */
+        margin: 0 auto 40px auto; /* Maintain centering but with more bottom space */
+    }
 }
 
 /* For larger screens, make the image float right with text wrapping */
