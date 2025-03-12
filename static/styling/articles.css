@@ -51,6 +51,41 @@
     opacity: 0.7;
 }
 
+.content-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.article-image-container {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.article-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-caption {
+    margin-top: 10px;
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* For larger screens, make the image float right with text wrapping */
+@media (min-width: 768px) {
+    .article-image-container {
+        float: right;
+        margin: 5px 0 20px 30px;
+        max-width: 350px;
+    }
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .content {
