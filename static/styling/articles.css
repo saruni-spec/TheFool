@@ -59,7 +59,7 @@
 .article-image-container {
     margin: 0 auto 30px auto; /* Adjusted margin to create space below the image */
     text-align: center;
-    max-width: 280px; /* Controlled width for small screens */
+    
 }
 
 .article-image {
@@ -79,7 +79,7 @@
 /* For larger screens, make the image larger but keep it at the top */
 @media (min-width: 768px) {
     .article-image-container {
-        max-width: 450px; /* Slightly larger on desktop */
+      
         margin: 0 auto 40px auto; /* Maintain centering but with more bottom space */
     }
 }
