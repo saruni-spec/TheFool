@@ -15,7 +15,9 @@
 
                 {% if article is not none %}
 
-                  <a href="{{ url_for('article.article',title=article[0])}}" >{{ article [0]}}</a>
+                <a href="{{ url_for('article.article', title=article[0]) }}">
+                    {{ article[0] | replace('_', ' ') }}
+                </a>
 
                 {% endif %}
 
