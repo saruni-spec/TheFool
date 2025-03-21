@@ -99,5 +99,6 @@ mail = Mail(app)
 if __name__ == "__main__":
     import os
 
-    port = int(os.environ.get("PORT", 5000))  # Render assigns a port dynamically
+    port = int(os.environ.get("PORT", 10000))  # Render detected port 10000
+    # Render assigns a port dynamically
     app.run(host="0.0.0.0", port=port)
