@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models.article import Article
+from models.article import Article, Reader
 
 bp = Blueprint("add_comment", __name__)
 
@@ -8,12 +8,19 @@ bp = Blueprint("add_comment", __name__)
 def add_comment():
     article_title = request.form.get("article_id")
     content = request.form.get("content")
-    author = request.form.get("author")
+    author_name = request.form.get("author")
 
-    comment = {"content": content, "author": author}
+    # Create or get reader
+    reader = Reader()
+    user_id = None
 
+    # In a real app, you'd likely get the user_id from session
+    # For now, we'll use the author name as a simple user identifier
+    reader_id = reader.get_or_create(author_name)
+
+    # Add the comment
     article = Article()
-    article.add_comment(article_title, comment=comment)
+    success = article.add_comment(article_title, reader_id, content)
 
-    # Return JSON response instead of redirecting
-    return jsonify({"success": True, "author": author, "content": content})
+    # Return JSON response
+    return jsonify({"success": success, "author": author_name, "content": content})

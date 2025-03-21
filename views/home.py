@@ -19,5 +19,4 @@ def cached_articles():
 @bp.route("/")
 @bp.route("/home")
 def home():
-    with current_app.app_context():
-        return render_template("home.html", articles=cached_articles())
+    return render_template("home.html", articles=cached_articles())
