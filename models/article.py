@@ -92,11 +92,22 @@ class Reader(DB):
     def __init__(self):
         super().__init__()
 
-    def get_or_create(self, user_id):
+    def get_or_create(self, name):
         """Get a reader by user_id or create if doesn't exist"""
         # Check if reader exists
+        query = "SELECT id FROM users where name = %s"
+        param = (name,)
+        result = self.execute_query(query, param)
+        user = result.fetchone()[0]
+        #
+        if not user:
+            query = "INSERT INTO users (name) VALUES (%s) RETURNING id"
+            param = (name,)
+            result = self.execute_query(query, param)
+            user = result.fetchone()[0]
+        #
         query = "SELECT id FROM reader WHERE user_id = %s"
-        param = (user_id,)
+        param = (user,)
         result = self.execute_query(query, param)
         reader = result.fetchone()
 
@@ -105,7 +116,7 @@ class Reader(DB):
 
         # Create new reader
         query = "INSERT INTO reader (user_id) VALUES (%s) RETURNING id"
-        param = (user_id,)
+        param = (user[0],)
         result = self.execute_query(query, param)
         self.conn.commit()
         return result.fetchone()[0]
