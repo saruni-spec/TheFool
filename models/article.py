@@ -76,9 +76,9 @@ class Article(DB):
     def get_comments(self, article_id):
         """Get all comments for an article"""
         query = """
-            SELECT c.id, c.comment, r.user_id,u.name
+            SELECT c.id, c.comment, r.user_id, u.name
             FROM comment c
-            JOIN reader r ON c.reader_id = r.id,
+            JOIN reader r ON c.reader_id = r.id
             JOIN users u ON r.user_id = u.id
             WHERE c.article_id = %s
             ORDER BY c.id
@@ -94,29 +94,39 @@ class Reader(DB):
 
     def get_or_create(self, name):
         """Get a reader by user_id or create if doesn't exist"""
-        # Check if reader exists
-        query = "SELECT id FROM users where name = %s"
+        # Check if user exists
+        query = "SELECT id FROM users WHERE name = %s"
         param = (name,)
         result = self.execute_query(query, param)
-        user = result.fetchone()[0]
-        #
-        if not user:
+        user_d = result.fetchone()
+
+        # If user doesn't exist, create the user
+        if not user_d:
             query = "INSERT INTO users (name) VALUES (%s) RETURNING id"
             param = (name,)
             result = self.execute_query(query, param)
-            user = result.fetchone()[0]
-        #
+            self.conn.commit()
+            user_d = result.fetchone()
+
+        # Ensure we have a valid user ID
+        if not user_d:
+            raise ValueError(f"Failed to create or retrieve user with name {name}")
+
+        user_id = user_d[0]
+
+        # Check if reader exists
         query = "SELECT id FROM reader WHERE user_id = %s"
-        param = (user,)
+        param = (user_id,)
         result = self.execute_query(query, param)
         reader = result.fetchone()
 
+        # If reader exists, return its ID
         if reader:
             return reader[0]
 
         # Create new reader
         query = "INSERT INTO reader (user_id) VALUES (%s) RETURNING id"
-        param = (user[0],)
+        param = (user_id,)
         result = self.execute_query(query, param)
         self.conn.commit()
         return result.fetchone()[0]
