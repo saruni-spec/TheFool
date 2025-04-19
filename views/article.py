@@ -75,9 +75,9 @@ def article(title):
     # Process comments from the new structure
     comments = []
     if (
-        article_data[4] and article_data[4][0] is not None
+        article_data[5] and article_data[5][0] is not None
     ):  # Check if comments exist and first is not null
-        for comment_data in article_data[4]:
+        for comment_data in article_data[5]:
             if isinstance(comment_data, dict):
                 comments.append(
                     {
