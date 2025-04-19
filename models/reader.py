@@ -22,21 +22,21 @@ class Reader(DB):
         self.password = generate_password_hash(password)
 
         param = (self.email, self.password)
-        query = "INSERT INTO Reader(username,password) values (%s,%s)"
+        query = "INSERT INTO users(name,password) values (%s,%s)"
         self.execute_query(query, param)
         self.conn.commit()
 
     def get(self):
 
         param = (self.email,)
-        query = "SELECT * FROM Reader WHERE username =%s "
+        query = "SELECT * FROM users WHERE name =%s "
 
         user = self.execute_query(query, param)
         return user.fetchone()
 
-    def delete(self, username):
+    def delete(self, name):
 
-        param = (username,)
-        query = "DELETE FROM Reader WHERE username =%s"
+        param = (name,)
+        query = "DELETE FROM users WHERE name =%s"
         self.execute_query(query, param)
         self.conn.commit()

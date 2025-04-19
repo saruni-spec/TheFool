@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block meta_description %}{{ description }}{% endblock %}
+{% block og_description %}{{ description }}{% endblock %}
+{% block twitter_description %}{{ description }}{% endblock %}
+
 {% block title %}
     {{title}}
 {% endblock %}

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="The Wise Fool - A unique blend of philosophy, psychology, humor and insights on life's complexities, delivered with wit and occasional wisdom.">
+    <meta name="description" content="{% block meta_description %}The Wise Fool - A blend of philosophy, psychology, humor and insights on life,with wit and occasional wisdom.{% endblock %}">
     <meta name="keywords" content="philosophy, psychology, satire, mental health, wisdom, humor, life advice, social commentary">
     <meta name="author" content="The Wise Fool">
     <meta name="msvalidate.01" content="59FD170CE5AAEF21805AC2466A71E743" />
@@ -19,13 +19,13 @@
     <meta property="og:url" content="https://wisefool.xyz{{ request.path }}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="The Wise Fool | Philosophy & Psychology with a Twist">
-    <meta property="og:description" content="Where wisdom wears a jester's hat - philosophy, psychology, and insights on life's complexities with humor and occasional accidental brilliance.">
+    <meta property="og:description" content="{% block og_description %}Where wisdom wears a jester's hat - philosophy, psychology, and insights on life's complexities with humor and occasional accidental brilliance.{% endblock %}">
     <meta property="og:image" content="https://wisefool.xyz{{url_for('static', filename='images/clown.png')}}">
     
     <!-- Twitter Card data -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="The Wise Fool | Philosophy & Psychology with a Twist">
-    <meta name="twitter:description" content="Where wisdom wears a jester's hat - philosophy, psychology, and insights delivered with wit.">
+    <meta name="twitter:description" content="{% block twitter_description %}Where wisdom wears a jester's hat - philosophy, psychology, and insights delivered with wit.{% endblock %}">
     
     <title>{% block page_title %}The Wise Fool | Philosophy, Psychology & Humor{% endblock %}</title>
     <link rel="sitemap" type="application/xml" title="Sitemap" href="{{ url_for('sitemap.sitemap') }}">

@@ -92,6 +92,7 @@ def article(title):
         "article.html",
         title=article_data[1],  # article_name
         content=article_data[2],  # article_content
+        description=article_data[4],  # article_description
         comments=comments,
         next_article=next_article_title,
     )

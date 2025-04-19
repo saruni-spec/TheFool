@@ -15,7 +15,7 @@ class Article(DB):
     def get(self, title):
         """Get an article by title with its comments"""
         query = """
-            SELECT a.id, a.article_name, a.article_content, a.author, 
+            SELECT a.id, a.article_name, a.article_content, a.author,a.description, 
                    array_agg(DISTINCT jsonb_build_object('id', c.id, 'content', c.comment, 'author', r.user_id, 'name', u.name)) as comments
             FROM article a
             LEFT JOIN comment c ON a.id = c.article_id
