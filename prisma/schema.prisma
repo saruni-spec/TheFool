@@ -1,0 +1,81 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  READER
+  WRITER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?  @unique
+  password  String?
+  role      UserRole @default(READER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  authorProfile Author?
+  readerProfile Reader?
+  articles      Article[]
+
+  @@map("users")
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique @map("article_name")
+  slug        String?  @unique
+  content     String   @map("article_content")
+  description String?
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  authorId Int?  @map("author")
+  author   User? @relation(fields: [authorId], references: [id])
+
+  comments Comment[]
+
+  @@map("article")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String   @map("comment")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  articleId Int     @map("article_id")
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  readerId Int    @map("reader_id")
+  reader   Reader @relation(fields: [readerId], references: [id], onDelete: Cascade)
+
+  @@map("comment")
+}
+
+model Author {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("author")
+}
+
+model Reader {
+  id       Int       @id @default(autoincrement())
+  userId   Int       @unique @map("user_id")
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments Comment[]
+
+  @@map("reader")
+}
