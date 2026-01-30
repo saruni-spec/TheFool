@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.5",
     "@prisma/client": "^6.4.1",
     "@tiptap/extension-bubble-menu": "^3.18.0",
     "@tiptap/extension-floating-menu": "^3.18.0",
