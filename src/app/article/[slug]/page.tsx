@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Calendar, User, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
+import CustomScript from "@/components/CustomScript";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -43,6 +44,9 @@ export default async function ArticlePage({ params }: PageProps) {
         className="prose prose-invert md:prose-lg max-w-none text-slate-300 leading-loose space-y-6 font-serif px-1"
         dangerouslySetInnerHTML={{ __html: article.content }}
       />
+      
+      {/* Custom JavaScript Injection */}
+      {article.customJs && <CustomScript script={article.customJs} />}
 
       {/* Comments Section */}
       <section className="pt-12 border-t border-white/5 space-y-8">

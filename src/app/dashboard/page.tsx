@@ -63,10 +63,11 @@ export default async function DashboardPage() {
                         <Link href={`/article/${article.slug || article.id}`}>
                             <Button variant="ghost" size="sm">View</Button>
                         </Link>
-                        {/* Edit button placeholder - implementing full edit flow is out of scope for initial migration */}
-                        <Button variant="outline" size="sm" disabled title="Editing coming soon">
-                            <PenTool className="w-3 h-3 mr-2" /> Edit
-                        </Button>
+                        <Link href={`/write/${article.id}`}>
+                            <Button variant="outline" size="sm">
+                                <PenTool className="w-3 h-3 mr-2" /> Edit
+                            </Button>
+                        </Link>
                     </div>
                 </Card>
             ))}

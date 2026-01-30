@@ -3,9 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, LogIn, UserPlus } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { Menu, X, LogIn, UserPlus, LayoutDashboard, PenTool, LogOut } from "lucide-react";
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,24 +32,48 @@ export default function Navbar() {
           <Link href="/help" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
             Help
           </Link>
+          {session && (
+            <>
+              <Link href="/dashboard" className="text-sm font-medium text-purple-300 hover:text-purple-200 transition-colors flex items-center gap-1">
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
+              </Link>
+              <Link href="/write" className="text-sm font-medium text-purple-300 hover:text-purple-200 transition-colors flex items-center gap-1">
+                 <PenTool className="w-4 h-4" />
+                 Write
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Auth Buttons (Desktop) */}
         <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/login"
-            className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all"
-          >
-            <LogIn className="h-4 w-4" />
-            Login
-          </Link>
-          <Link
-            href="/register"
-            className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-purple-400 hover:text-slate-950 transition-all shadow-[0_0_15px_-3px_rgba(255,255,255,0.3)] hover:shadow-[0_0_20px_-3px_rgba(192,132,252,0.5)]"
-          >
-            <UserPlus className="h-4 w-4" />
-            Signup
-          </Link>
+          {session ? (
+            <button
+              onClick={() => signOut()}
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-all"
+              >
+                <LogIn className="h-4 w-4" />
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-purple-400 hover:text-slate-950 transition-all shadow-[0_0_15px_-3px_rgba(255,255,255,0.3)] hover:shadow-[0_0_20px_-3px_rgba(192,132,252,0.5)]"
+              >
+                <UserPlus className="h-4 w-4" />
+                Signup
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -71,23 +97,46 @@ export default function Navbar() {
           <Link href="/help" className="block text-base font-medium text-slate-300 hover:text-white" onClick={() => setIsOpen(false)}>
             Help
           </Link>
+          {session && (
+            <>
+                <Link href="/dashboard" className="block text-base font-medium text-purple-300 hover:text-purple-200" onClick={() => setIsOpen(false)}>
+                    Dashboard
+                </Link>
+                <Link href="/write" className="block text-base font-medium text-purple-300 hover:text-purple-200" onClick={() => setIsOpen(false)}>
+                    Write
+                </Link>
+            </>
+          )}
+
           <div className="pt-4 flex flex-col gap-3">
-             <Link
-                href="/login"
-                className="flex items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-3 text-sm font-medium text-slate-300 hover:bg-white/5"
-                 onClick={() => setIsOpen(false)}
-              >
-                <LogIn className="h-4 w-4" />
-                Login
-              </Link>
-              <Link
-                href="/register"
-                className="flex items-center justify-center gap-2 rounded-lg bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 hover:bg-purple-400 transition-colors"
-                 onClick={() => setIsOpen(false)}
-              >
-                <UserPlus className="h-4 w-4" />
-                Signup
-              </Link>
+             {session ? (
+                <button
+                    onClick={() => { signOut(); setIsOpen(false); }}
+                    className="flex items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-3 text-sm font-medium text-slate-300 hover:bg-white/5"
+                >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                </button>
+             ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="flex items-center justify-center gap-2 rounded-lg border border-white/10 px-4 py-3 text-sm font-medium text-slate-300 hover:bg-white/5"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <LogIn className="h-4 w-4" />
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="flex items-center justify-center gap-2 rounded-lg bg-slate-100 px-4 py-3 text-sm font-medium text-slate-900 hover:bg-purple-400 transition-colors"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    Signup
+                  </Link>
+                </>
+             )}
           </div>
         </div>
       )}

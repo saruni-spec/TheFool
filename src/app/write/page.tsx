@@ -6,6 +6,7 @@ import { useState } from "react";
 import { createArticle } from "@/actions/articles";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import RichTextEditor from "@/components/ui/RichTextEditor";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ArrowLeft, Save } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +16,7 @@ export default function WritePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [content, setContent] = useState("");
 
   if (!session) {
     return (
@@ -27,7 +29,15 @@ export default function WritePage() {
     setLoading(true);
     setError("");
 
+    if (!content.trim()) {
+        setError("Content is required");
+        setLoading(false);
+        return;
+    }
+
     const formData = new FormData(e.currentTarget);
+    formData.set("content", content); // Append editor content
+
     const result = await createArticle(formData, parseInt(session!.user.id));
 
     if (result.error) {
@@ -40,7 +50,7 @@ export default function WritePage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <Link href="/dashboard" className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-300 transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>
@@ -77,14 +87,24 @@ export default function WritePage() {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Content (HTML supported for now)</label>
+                    <label className="text-sm font-medium text-slate-300">Custom JavaScript (Optional - Advanced)</label>
                     <textarea 
-                        name="content" 
-                        required
-                        className="w-full h-64 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:ring-2 focus:ring-purple-400 focus:outline-none font-mono"
-                        placeholder="<p>Start writing...</p>"
+                        name="customJs" 
+                        className="w-full h-32 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:ring-2 focus:ring-purple-400 focus:outline-none font-mono"
+                        placeholder="// console.log('Hello from custom JS');"
                     />
-                    <p className="text-xs text-slate-500">Basic HTML tags are supported.</p>
+                    <p className="text-xs text-yellow-500/80">Warning: This code will execute on the article page. Use with caution.</p>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-300">Content</label>
+                    <RichTextEditor 
+                        content={content} 
+                        onChange={setContent} 
+                        placeholder="Start writing... (Try highlighting text or pasting images)"
+                    />
+                    {/* Hidden input to ensure native form validation works if needed, although we check state manually */}
+                    <input type="hidden" name="content" value={content} />
                 </div>
 
                 <div className="pt-4 flex justify-end">
