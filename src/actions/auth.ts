@@ -1,44 +1,23 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-import { UserRole } from "@prisma/client";
 
-export async function registerUser(formData: FormData) {
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  if (!name || !email || !password) {
-    return { error: "Missing fields" };
-  }
-
+export async function checkLegacyUser(username: string) {
   try {
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
+    if (!username) return { error: "Username required" };
+
+    const user = await prisma.user.findFirst({
+      where: { name: username },
+      select: { tempPassword: true }
     });
 
-    if (existingUser) {
-      return { error: "User already exists" };
+    if (user && user.tempPassword) {
+      return { found: true, tempPassword: user.tempPassword };
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: UserRole.READER, // Default role
-        readerProfile: {
-           create: {} // Create associated reader profile
-        }
-      },
-    });
-
-    return { success: true };
+    return { found: false };
   } catch (error) {
-    console.error("Registration error:", error);
-    return { error: "Registration failed" };
+    console.error("Check legacy user error:", error);
+    return { error: "Failed to check user" };
   }
 }

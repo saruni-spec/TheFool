@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addComment } from "@/actions/articles";
+import { checkLegacyUser } from "@/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Loader2 } from "lucide-react";
@@ -18,8 +19,28 @@ export default function CommentForm({ articleId }: { articleId: number }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [recoveryMsg, setRecoveryMsg] = useState<{name: string, pass: string} | null>(null);
 
   const isAuthenticated = status === "authenticated";
+
+  // Check for legacy local storage on mount
+  useState(() => {
+     if (typeof window !== 'undefined' && !isAuthenticated) {
+        // Try legacy keys, prioritizing 'fool_user' (found in git history)
+        const legacyName = localStorage.getItem('fool_user') || localStorage.getItem('username') || localStorage.getItem('user') || localStorage.getItem('name');
+        
+        if (legacyName) {
+            checkLegacyUser(legacyName).then(res => {
+                if (res.found && res.tempPassword) {
+                    setRecoveryMsg({ name: legacyName, pass: res.tempPassword });
+                    setUsername(legacyName);
+                    setPassword(res.tempPassword); // Pre-fill for convenience
+                    setIsExpanded(true); // Open the form
+                }
+            });
+        }
+     }
+  });
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -134,6 +155,15 @@ export default function CommentForm({ articleId }: { articleId: number }) {
               <h3 className="text-sm font-medium text-slate-300">Login to Comment</h3>
               <button type="button" onClick={() => setIsExpanded(false)} className="text-xs text-slate-500 hover:text-white">Cancel</button>
            </div>
+           
+           {recoveryMsg && (
+             <div className="bg-purple-500/10 border border-purple-500/30 p-3 rounded-lg text-sm text-center mb-4">
+                <p className="text-purple-300 font-bold mb-1">Welcome back, {recoveryMsg.name}!</p>
+                <p className="text-slate-300">We found your legacy account.</p>
+                <p className="text-slate-300 mt-1">Your one-time password is: <code className="bg-purple-500/20 px-1 rounded text-purple-200 font-mono">{recoveryMsg.pass}</code></p>
+                <p className="text-xs text-slate-500 mt-2">We've pre-filled it for you below.</p>
+             </div>
+           )}
            
            <div className="space-y-3">
              <Input 

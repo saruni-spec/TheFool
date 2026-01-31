@@ -1,6 +1,6 @@
-User Migration Report
+Definitive User Report
 =====================
-Name | Generated Password
+Name | Current Password
 -------------------------
 Winston | 1stfool
 the fool | 2ndfool

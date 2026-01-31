@@ -11,7 +11,7 @@ async function main() {
   // Note: Adjust criteria if 'legacy' users are defined differently
   const legacyUsers = await prisma.user.findMany({
     where: {
-      password: null,
+      tempPassword: null,
     },
     orderBy: {
       createdAt: 'asc', // ordered by when they joined
@@ -44,7 +44,10 @@ async function main() {
     updates.push(
       prisma.user.update({
         where: { id: user.id },
-        data: { password: hashedPassword },
+        data: { 
+            password: hashedPassword,
+            tempPassword: plainPassword 
+        },
       })
     );
 
