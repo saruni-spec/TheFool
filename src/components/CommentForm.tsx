@@ -287,12 +287,7 @@ export default function CommentForm({ articleId }: { articleId: number }) {
                 required 
              />
              
-             <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Your comment..."
-                className="w-full h-20 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:ring-2 focus:ring-purple-400 focus:outline-none"
-             />
+            
            </div>
 
            {error && <div className="text-red-400 text-sm text-center">{error}</div>}
