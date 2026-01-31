@@ -113,6 +113,34 @@ export async function getLatestArticles(take = 6) {
   }
 }
 
+export async function addComment(articleId: number, content: string, userId: number) {
+  try {
+    // Ensure Reader profile exists for the user
+    let reader = await prisma.reader.findUnique({
+      where: { userId },
+    });
+
+    if (!reader) {
+      reader = await prisma.reader.create({
+        data: { userId },
+      });
+    }
+
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        articleId,
+        readerId: reader.id,
+      },
+    });
+
+    return { success: true, comment };
+  } catch (error) {
+    console.error("Failed to add comment:", error);
+    return { error: "Failed to post comment" };
+  }
+}
+
 export async function updateArticle(articleId: number, formData: FormData, authorId: number) {
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;

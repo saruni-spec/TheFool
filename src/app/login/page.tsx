@@ -20,12 +20,12 @@ export default function LoginPage() {
     setError("");
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
+    const username = formData.get("username") as string;
     const password = formData.get("password") as string;
 
     try {
       const res = await signIn("credentials", {
-        email,
+        username,
         password,
         redirect: false,
       });
@@ -64,11 +64,11 @@ export default function LoginPage() {
               </div>
             )}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Email</label>
+              <label className="text-sm font-medium text-slate-300">Username or Email</label>
               <Input 
-                name="email" 
-                type="email" 
-                placeholder="fool@wise.com" 
+                name="username" 
+                type="text" 
+                placeholder="reader_j or fool@wise.com" 
                 required 
                 className="bg-slate-950/50 border-white/5 focus:border-purple-500/50"
               />

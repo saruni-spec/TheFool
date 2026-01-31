@@ -4,6 +4,7 @@ import { Calendar, User, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import CustomScript from "@/components/CustomScript";
+import CommentForm from "@/components/CommentForm";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -77,11 +78,8 @@ export default async function ArticlePage({ params }: PageProps) {
           )}
         </div>
 
-        {/* Placeholder for Add Comment */}
-        <div className="bg-slate-900/20 p-6 rounded-xl border border-dashed border-slate-800 text-center">
-             <p className="text-slate-400 mb-4">Join the conversation</p>
-             <Button variant="outline">Sign in to Comment</Button>
-        </div>
+        {/* Comment Form */}
+        <CommentForm articleId={article.id} />
       </section>
     </article>
   );
