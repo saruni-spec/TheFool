@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addComment } from "@/actions/articles";
-import { checkLegacyUser } from "@/actions/auth";
+import { checkClaimStatus, claimAccount } from "@/actions/claim";
+import { checkLegacyUser, registerUser } from "@/actions/auth";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { Loader2 } from "lucide-react";
@@ -12,7 +13,8 @@ import { Loader2 } from "lucide-react";
 export default function CommentForm({ articleId }: { articleId: number }) {
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
+  // Basic State
   const [content, setContent] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,10 +23,15 @@ export default function CommentForm({ articleId }: { articleId: number }) {
   const [error, setError] = useState("");
   const [recoveryMsg, setRecoveryMsg] = useState<{name: string, pass: string} | null>(null);
 
+  // Claim Flow State
+  const [claimStatus, setClaimStatus] = useState<"none" | "unclaimed" | "fuzzy" | "taken" | "available">("none");
+  const [suggestion, setSuggestion] = useState<{name: string, id: number} | null>(null);
+  const [claimUserId, setClaimUserId] = useState<number | null>(null);
+
   const isAuthenticated = status === "authenticated";
 
   // Check for legacy local storage on mount
-  useState(() => {
+  useEffect(() => {
      if (typeof window !== 'undefined' && !isAuthenticated) {
         // Try legacy keys, prioritizing 'fool_user' (found in git history)
         const legacyName = localStorage.getItem('fool_user') || localStorage.getItem('username') || localStorage.getItem('user') || localStorage.getItem('name');
@@ -40,7 +47,46 @@ export default function CommentForm({ articleId }: { articleId: number }) {
             });
         }
      }
-  });
+     // Run once on mount
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array to run only on mount
+
+  const checkUsername = async () => {
+      if (!username) return;
+      setError("");
+      setLoading(true);
+      
+      try {
+          const res = await checkClaimStatus(username);
+          setLoading(false);
+
+          if (res.status === "unclaimed") {
+              setClaimStatus("unclaimed");
+              setClaimUserId(res.userId!);
+              setSuggestion({ name: res.name!, id: res.userId! });
+          } else if (res.status === "fuzzy_match") {
+              setClaimStatus("fuzzy");
+              setSuggestion({ name: res.suggestion!, id: res.userId! });
+          } else if (res.status === "taken") {
+              setClaimStatus("taken");
+              setError("Username is already taken.");
+          } else {
+              setClaimStatus("available");
+          }
+      } catch (e) {
+          setError("Failed to check username");
+          setLoading(false);
+      }
+  };
+
+  const acceptSuggestion = () => {
+      if (suggestion) {
+          setUsername(suggestion.name);
+          setClaimUserId(suggestion.id);
+          setClaimStatus("unclaimed"); // Treat as unclaimed logic now
+          setError("");
+      }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -50,63 +96,101 @@ export default function CommentForm({ articleId }: { articleId: number }) {
     try {
       let finalUserId = session?.user?.id;
 
-      // Handle Login if not authenticated
+      // Check username if not checked yet and trying to login/claim
+      if (!isAuthenticated && claimStatus === "none") {
+          await checkUsername();
+          setLoading(false);
+          return; // Let user see status
+      }
+
+      // Handle Authentication / Claiming is performed here
       if (!isAuthenticated) {
-        if (!username || !password) {
+          if (!username || !password) {
             setError("Please provide username and password");
             setLoading(false);
             return;
-        }
+          }
 
-        const result = await signIn("credentials", {
-          redirect: false,
-          username,
-          password,
-        });
+          // Case 1: Claiming Legacy Account (Exact or Fuzzy Accepted)
+          if ((claimStatus === "unclaimed" || claimStatus === "fuzzy") && claimUserId) {
+              const res = await claimAccount(claimUserId, password);
+              if (res.error) {
+                  setError(res.error);
+                  setLoading(false);
+                  return;
+              }
+              // Claim successful! Now login.
+              // We need to login with the NEW password.
+              const loginRes = await signIn("credentials", {
+                  redirect: false,
+                  username: suggestion?.name || username, // Use the correct name
+                  password,
+              });
+              
+              if (loginRes?.error) {
+                  setError("Claim successful but login failed. Please try logging in.");
+                  setLoading(false);
+                  return;
+              }
+              window.location.reload(); 
+              return;
+          }
 
-        if (result?.error) {
-          setError("Invalid credentials. Try again.");
-          setLoading(false);
-          return;
-        }
-        
-        // Fetch session again or reload to get the user ID? 
-        // signIn redirect:false doesn't update the session object immediately in this hook render cycle.
-        // We might need to refresh the page or wait. 
-        // For simplicity/reliability given the "no page change" request, 
-        // we might actually need to force a reload OR use the router.refresh() and rely on optimistic UI?
-        // Actually, if login succeeds, we can't post the comment immediately *unless* we get the ID.
-        // NextAuth doesn't return the Session object on signIn.
-        
-        // Strategy: Force a router refresh to update session state, then user has to click submit again? 
-        // Or better: Reload the page. 
-        // User asked for "no page change". 
-        // We can manually call the server action if we trust the auth happened? No, server action checks session.
-        
-        // Let's reload for now to be safe, as maintaining session state sync is tricky without a provider update.
-        // Wait, if I do `window.location.reload()`, it disrupts the flow.
-        // Let's try `router.refresh()` and see if session updates. 
-        // Actually, let's just prompt "Logged in! Click post again." or try to handle it.
-        // For now, let's simple-path: Login -> Refresh -> User posts.
-        // But user said "form appear right there no page change".
-        
-        // Ideally:
-        // 1. signIn success.
-        // 2. We trigger a re-validation of session.
-        // 3. Then we call addComment.
-        
-        // Let's implement the "Login First" part as a distinct step in the same form if strictly needed, 
-        // but let's try to just do the action.
-        window.location.reload(); // Simplest way to get the session cookie active for server actions
-        return; 
+          // Case 2: Standard Login OR Registration
+          // If available -> Register
+          if (claimStatus === "available") {
+             const formData = new FormData();
+             formData.append("name", username);
+             formData.append("email", `${Date.now()}@fool.local`); // Temp email since we focus on username
+             formData.append("password", password);
+             
+             const regRes = await registerUser(formData);
+             if (regRes.error) {
+                 setError(regRes.error);
+                 setLoading(false);
+                 return;
+             }
+             
+             // Now login
+             const loginRes = await signIn("credentials", {
+                  redirect: false,
+                  username,
+                  password,
+              });
+              if (loginRes?.error) {
+                  setError("Login failed.");
+                  setLoading(false);
+                  return;
+              }
+              window.location.reload();
+              return;
+          }
+          
+          // Case 3: Taken - Just Try Login (maybe they are the owner)
+          if (claimStatus === "taken") {
+               const result = await signIn("credentials", {
+                  redirect: false,
+                  username,
+                  password,
+                });
+
+                if (result?.error) {
+                  setError("Invalid credentials or username taken.");
+                  setLoading(false);
+                  return;
+                }
+                window.location.reload();
+                return;
+          }
       }
 
+      // If authenticated, post comment
       if (finalUserId && content.trim()) {
          const result = await addComment(articleId, content, parseInt(finalUserId));
          if (result.success) {
             setContent("");
             setIsExpanded(false);
-            router.refresh(); // Refresh to show new comment
+            router.refresh(); 
          } else {
             setError("Failed to post comment.");
          }
@@ -152,33 +236,57 @@ export default function CommentForm({ articleId }: { articleId: number }) {
       ) : (
         <form onSubmit={handleSubmit} className="text-left space-y-4 max-w-md mx-auto">
            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium text-slate-300">Login to Comment</h3>
+              <h3 className="text-sm font-medium text-slate-300">
+                  {claimStatus === "unclaimed" ? "Claim Legacy Account" : "Login or Join"}
+              </h3>
               <button type="button" onClick={() => setIsExpanded(false)} className="text-xs text-slate-500 hover:text-white">Cancel</button>
            </div>
            
-           {recoveryMsg && (
+           {/* Legacy Recovery Auto-Detect Message */}
+           {recoveryMsg && claimStatus === "none" && (
              <div className="bg-purple-500/10 border border-purple-500/30 p-3 rounded-lg text-sm text-center mb-4">
                 <p className="text-purple-300 font-bold mb-1">Welcome back, {recoveryMsg.name}!</p>
-                <p className="text-slate-300">We found your legacy account.</p>
-                <p className="text-slate-300 mt-1">Your one-time password is: <code className="bg-purple-500/20 px-1 rounded text-purple-200 font-mono">{recoveryMsg.pass}</code></p>
-                <p className="text-xs text-slate-500 mt-2">We've pre-filled it for you below.</p>
+                <p className="text-slate-300">Set a password to claim your legacy account.</p>
              </div>
+           )}
+
+           {/* Fuzzy Match Suggestion */}
+           {claimStatus === "fuzzy" && suggestion && (
+               <div className="bg-yellow-500/10 border border-yellow-500/30 p-3 rounded-lg text-sm text-center mb-4">
+                   <p className="text-yellow-200 mb-2">Did you mean <strong>{suggestion.name}</strong>?</p>
+                   <Button type="button" size="sm" variant="outline" onClick={acceptSuggestion}>
+                       Yes, that's me
+                   </Button>
+                   <p className="text-xs text-slate-500 mt-2">This looks like a legacy account similar to your name.</p>
+               </div>
            )}
            
            <div className="space-y-3">
-             <Input 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
-                placeholder="Username (e.g. Reader J.)" 
-                required 
-             />
+             <div className="flex gap-2">
+                 <Input 
+                    value={username} 
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        setClaimStatus("none"); // Reset status on edit
+                    }} 
+                    onBlur={checkUsername} // Check on blur
+                    placeholder="Username" 
+                    required 
+                    className={claimStatus === "taken" ? "border-red-500" : ""}
+                 />
+             </div>
+             {claimStatus === "taken" && <p className="text-xs text-red-400">Username taken. Enter password to login.</p>}
+             {claimStatus === "available" && <p className="text-xs text-green-400">Username available! Set a password to create account.</p>}
+             {claimStatus === "unclaimed" && <p className="text-xs text-purple-400">Legacy account found! Set a password to claim it.</p>}
+
              <Input 
                 type="password" 
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
-                placeholder="Password" 
+                placeholder={claimStatus === "unclaimed" ? "Set New Password" : "Password"}
                 required 
              />
+             
              <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -191,11 +299,8 @@ export default function CommentForm({ articleId }: { articleId: number }) {
 
            <Button type="submit" disabled={loading} className="w-full">
               {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Login & Post
+              {claimStatus === "unclaimed" || claimStatus === "fuzzy" ? "Claim & Post" : "Post Comment"}
            </Button>
-           <p className="text-xs text-slate-600 text-center">
-             Legacy user? Try your name and generated password.
-           </p>
         </form>
       )}
     </div>
