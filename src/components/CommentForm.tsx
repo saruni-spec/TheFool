@@ -286,15 +286,13 @@ export default function CommentForm({ articleId }: { articleId: number }) {
                 placeholder={claimStatus === "unclaimed" ? "Set New Password" : "Password"}
                 required 
              />
-             
-            
            </div>
 
            {error && <div className="text-red-400 text-sm text-center">{error}</div>}
 
            <Button type="submit" disabled={loading} className="w-full">
               {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              {claimStatus === "unclaimed" || claimStatus === "fuzzy" ? "Claim & Post" : "Post Comment"}
+              {claimStatus === "unclaimed" || claimStatus === "fuzzy" ? "Claim Account" : "Login / Create Account"}
            </Button>
         </form>
       )}
